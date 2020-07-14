@@ -1,0 +1,28 @@
+  1 = Best Volume = 4.925316
+  2 = Best Volume = 4.298264
+  3 = Best Volume = 4.327760
+  4 = Best Volume = 1.539720
+  5 = Best Volume = 3.290658
+  6 = Best Volume = 1.642800
+  7 = Best Volume = 1.524278
+  8 = Best Volume = 0.980431
+  9 = Best Volume = 0.431978
+ 10 = Best Volume = 0.000008
+ 11 = Best Volume = 0.000034
+ 12 = Best Volume = 0.942535
+ 13 = Best Volume = 0.000015
+ 14 = Best Volume = 0.004093
+ 15 = Best Volume = 0.000007
+ 16 = Best Volume = 1.557316
+ 17 = Best Volume = 2.487088
+ 18 = Best Volume = 1.532505
+ 19 = Best Volume = 0.423803
+ 20 = Best Volume = 0.421130
+ 21 = Best Volume = 0.423072
+ 22 = Best Volume = 0.005446
+ 23 = Best Volume = 0.000069
+Leaves: 12
+Total triangles: 20
+Worst node: 4
+Average: 1
+Volumen = 1.028372

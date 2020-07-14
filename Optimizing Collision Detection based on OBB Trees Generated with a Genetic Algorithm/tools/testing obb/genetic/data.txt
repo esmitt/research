@@ -1,0 +1,5 @@
+leaves: 9536
+total triangles: 22662
+Worst node: 180
+Average: 2
+Corridas del genetico: 19071

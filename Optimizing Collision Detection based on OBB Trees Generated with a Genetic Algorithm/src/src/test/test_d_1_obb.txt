@@ -1,0 +1,7 @@
+..\..\data\cuchillo.off
+..\..\data\pieescalado.off
+..\..\data\cuchillo.obb
+..\..\data\pie.obb
+OBBTree
+automatic
+route1_d.txt

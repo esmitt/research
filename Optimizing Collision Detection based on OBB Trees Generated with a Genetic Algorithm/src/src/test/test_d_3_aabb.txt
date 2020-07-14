@@ -1,0 +1,7 @@
+..\..\data\cuchillo.off
+..\..\data\pieescalado.off
+..\..\data\cuchillo.aabb
+..\..\data\pie.aabb
+AABBTree
+automatic
+route3_d.txt

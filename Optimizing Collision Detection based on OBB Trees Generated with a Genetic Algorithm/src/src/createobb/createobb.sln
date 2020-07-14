@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "createobb", "createobb.vcproj", "{8219E831-65C9-4F10-87B3-89BC852767DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8219E831-65C9-4F10-87B3-89BC852767DA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8219E831-65C9-4F10-87B3-89BC852767DA}.Debug|Win32.Build.0 = Debug|Win32
+		{8219E831-65C9-4F10-87B3-89BC852767DA}.Release|Win32.ActiveCfg = Release|Win32
+		{8219E831-65C9-4F10-87B3-89BC852767DA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

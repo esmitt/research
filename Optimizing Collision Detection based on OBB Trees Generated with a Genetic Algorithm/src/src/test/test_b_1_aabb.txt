@@ -1,0 +1,7 @@
+..\..\data\FinalProtesis.off
+..\..\data\pieescalado.off
+..\..\data\protesis.aabb
+..\..\data\pie.aabb
+AABBTree
+automatic
+route1_b.txt

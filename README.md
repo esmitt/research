@@ -5,3 +5,4 @@ Compilation of technical documents, links, images, slides that I wrote in some p
 **List**
 * 2009
     * Planificación Preoperatoria Digital en Traumatología
+    * Optimizing Collision Detection based on OBB Trees Generated with a Genetic Algorithm

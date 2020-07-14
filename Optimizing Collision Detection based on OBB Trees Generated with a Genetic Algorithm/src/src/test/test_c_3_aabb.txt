@@ -1,0 +1,7 @@
+..\..\data\cuchillo.off
+..\..\data\FinalTibiaSinTapa.off
+..\..\data\cuchillo.aabb
+..\..\data\tibia.aabb
+AABBTree
+automatic
+route3_c.txt

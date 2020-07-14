@@ -1,0 +1,38 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: pcs - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\hector\LOCALS~1\Temp\RSP57A.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR"Debug/" /Fp"Debug/pcs.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Documents and Settings\hector\MyStuff\programming\tesis\tesis\src\PCS\pcs.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\hector\LOCALS~1\Temp\RSP57A.tmp" 
+Creating temporary file "C:\DOCUME~1\hector\LOCALS~1\Temp\RSP57B.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/pcs.pdb" /debug /machine:I386 /out:"Debug/pcs.exe" /pdbtype:sept 
+".\Debug\Defs.obj"
+".\Debug\extgl.obj"
+".\Debug\off.obj"
+".\Debug\pcs.obj"
+]
+Creating command line "link.exe @C:\DOCUME~1\hector\LOCALS~1\Temp\RSP57B.tmp"
+<h3>Output Window</h3>
+Compiling...
+pcs.cpp
+Linking...
+Creating command line "bscmake.exe /nologo /o"Debug/pcs.bsc"  ".\Debug\Defs.sbr" ".\Debug\extgl.sbr" ".\Debug\off.sbr" ".\Debug\pcs.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+pcs.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
