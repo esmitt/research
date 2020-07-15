@@ -6,7 +6,7 @@ In this paper a method for generating Oriented Bounding Boxes (OBB) using geneti
 
 **Download**
 * [SIACG-09](paper/siacg09.pdf)
-* [In ResearchGate](https://www.researchgate.net/publication/236834317_Optimizing_Collision_Detection_based_on_OBB_Trees_Generated_with_a_Genetic_Algorithm)
+* [In ResearchGate](https://www.researchgate.net/publication/236834317_Optimizing_Collision_Detection_based_on_OBB_Trees_Generated_with_a_Genetic_Algorithm.pdf)
 
 
 **Slides**

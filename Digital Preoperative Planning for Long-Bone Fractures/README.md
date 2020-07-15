@@ -9,7 +9,7 @@ Nowadays, fracture management is an essential part of everyday clinical decision
 
 **Slides**
 
-Available in the presentation folder as [presentation/cimenics-2010](presentation/cimenics-2010)
+Available in the presentation folder as [presentation/cimenics-2010](presentation/cimenics-2010.pdf)
 
 **Notes**
 
