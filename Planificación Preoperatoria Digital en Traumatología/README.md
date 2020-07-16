@@ -5,7 +5,7 @@ En este documento se presenta un esquema para la planificación preoperatoria di
 
 
 **Download**
-* [RT-2009-7](https://raw.githubusercontent.com/esmitt/research/master/Planificaci%C3%B3n%20Preoperatoria%20Digital%20en%20Traumatolog%C3%ADa/RT-2009-7.pdf)
+* [RT-2009-7](RT-2009-7.pdf)
 
 
 **Notes**

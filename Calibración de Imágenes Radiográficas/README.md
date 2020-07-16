@@ -5,7 +5,7 @@ En la actualidad, es conveniente que los Centros Hospitalarios almacenen los cas
 
 
 **Download**
-* [RT-2010-2](https://raw.githubusercontent.com/esmitt/research/master/Planificaci%C3%B3n%20Preoperatoria%20Digital%20en%20Traumatolog%C3%ADa/RT-2010-2.pdf)
+* [RT-2010-2](RT-2010-2.pdf)
 
 
 **Notes**
