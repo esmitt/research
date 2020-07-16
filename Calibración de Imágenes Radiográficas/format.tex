@@ -1,0 +1,223 @@
+\documentclass[09pt,onecolumn]{article}
+
+%%\usepackage[latin1]{inputenc} %Codificación europea del teclado
+\usepackage[T1]{fontenc} %Dispone de fuentes tipos carácteres acentuados
+\usepackage[spanish]{babel} 
+\usepackage{babelbib} 
+
+\usepackage{algorithm_spa}
+\usepackage{algpseudocode}
+\usepackage{graphics}
+\usepackage{graphicx}
+%\usepackage{algc}
+
+\usepackage[lmargin=1cm,rmargin=1cm,tmargin=3cm,bmargin=2cm]{geometry}
+
+\title{Calibraci\'on de Im\'agenes Radiogr\'aficas}
+
+\author{Esmitt Ram\'irez J.}
+\date{Marzo 2010}
+
+\hyphenation{pro-ce-di-miento pro-ce-di-mientos pre-ope-ra-to-ria mo-da-li-da-des dia-fi-sia-rias rea-li-cen pla-ni-fi-ca-cion or-ga-nis-mo he-rra-mien-ta co-rres-pon-diente exis-te par-ti-cu-lar-mente li-te-ra-tu-ra i-ma-ging bi-blio-graf-fi-ca }
+
+%\marginsize{1cm}{1cm}{1cm}{1cm}
+%\topmargin{1pt}
+%\setlength{\leftmargin}{-5.0in}
+%%%%%%%%
+%% tipo de numeracion
+\pagenumbering{arabic}
+
+%%%%%%%%
+\pagestyle{myheadings}
+\markboth{Calibracion}{E. RAMIREZ}
+\newcommand{\comment}[1]{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+En la actualidad, es conveniente que los Centros Hospitalarios almacenen los casos cl\'inicos de los pacientes en formato digital  para su posterior estudio. Sin embargo, existen Centros Hospitalarios que no poseen estos mecanismos. Particularmente en el \'area de Traumatolog\'ia, los casos cl\'inicos est\'an asociados a placas de Rayos-X. El m\'edico traumat\'ologo coloca la placa sobre un negatoscopio y toma una fotograf\'ia digital. Con esta imagen, es posible realizar planificaciones preoperatorias como parte del procedimiento de una cirug\'ia a un paciente. Dado que diferentes im\'agenes pueden ser capturadas por diferentes c\'amaras a distintas resoluciones, esto crea un problema al momento de realizar una correspondencia entre las dimensiones l\'ogicas de la imagen y las dimensiones f\'isicas de la placa de Rayos-X real. Introducir en la escena un objeto de tama\~no conocido al momento de la adquisici\'on de la imagen (objeto referencia) permite realizar la correspondencia correctamente (calibraci\'on). Este proceso de calibraci\'on puede ser realizado de forma manual, pero se necesita invertir una considerable cantidad tiempo y es propenso a errores. Una soluci\'on es realizar este proceso de forma autom\'atica con el objetivo de minimizar el tiempo a invertir y definir un objeto de referencia que sea utilizado en todos los casos de la adquisici\'on de una imagen. En este documento se presenta un algoritmo para la calibraci\'on autom\'atica de una imagen utilizando los orificios dejados por una perforadora de papel como objeto de referencia.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\noindent \textbf{Palabras Claves:} Procesamiento de im\'agenes, patrones, calibraci\'on de im\'agenes, placas de Rayos-X. \\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Los m\'edicos traumat\'ologos deben realizar una planificaci\'on de las fracturas de los pacientes donde indicar\'an los materiales, t\'ecnicas y m\'etodos quir\'urgicos a utilizar. La principal herramienta de trabajo para estos, son las placas de Rayos-X que representan un caso cl\'inico de una fractura.
+
+En el trabajo presentado en \cite{RAM09}, se muestra un esquema de planificaci\'on preoperatoria digital para traumatolog\'ia. En este documento, explicaremos en detalle los pasos \# 1 y \#2: Adquisici\'on de la imagen y Calibraci\'on de la Imagen. En la Secci\'on 1 se describe el proceso de la adquisici\'on de la imagen a trabajar. La Secci\'on 2 de Preparaci\'on de la imagen describe los pasos necesarios que se deben ejecutar sobre la imagen de entrada. En la Secci\'on 3, se explica en detalle el Algoritmo de B\'usqueda de Orificios empleado para realizar la calibraci\'on. Finalmente, la Secci\'on 4 explica el proceso de Calibraci\'on final.
+
+\section{Adquisición de la imagen}
+
+Según el esquema presentado en \cite{RAM09}, las imágenes a trabajar pueden ser tomadas desde dos fuentes: empleando una cámara digital ó en formato digital DICOM (\textit{Digital Imaging and Communication in Medicine}). Para el caso de imágenes DICOM, la modalidad a emplear puede ser CR (\textit{Computer Radiography}) o RG (\textit{Radiographic Imaging}). Sin embargo, normalmente no es necesario calibrar las im\'agenes DICOM porque el encabezado de estos archivos ya incluye la información de la resolución f\'isica del p\'ixel. 
+
+Para el caso de imágenes tomadas utilizando una cámara digital, el médico coloca sobre un negatoscopio la(s) placa(s) de Rayos-X para generar el contraste adecuado y procede a tomar la fotografía. Dicha imagen posee una resolución en p\'ixeles que puede ser cambiada de acuerdo a la capacidad de la cámara. Por ejemplo, al tomar una fotografía de un fémur de un niño se puede obtener la imagen a una resolución de $1024 \times 768$ p\'ixeles; pero al utilizar una cámara distinta se puede obtener la misma imagen a una resolución de $1680 \times 1050$ p\'ixeles. Para que el algoritmo presentado en este documento funcione correctamente, la resolución de la fotograf\'ia debe ser de al menos $800 \times 600$ p\'ixeles. Cabe destacar que para obtener la resolución m\'inima requerida de $800 \times 600$, se requiere de una c\'amara con al menos 0.5 megapíxeles.
+
+Conocer las dimensiones reales de una imagen es relevante ya que permitirá realizar medidas sobre la misma. Las medidas realizadas sobre la anatomía de un paciente permiten obtener las dimensiones reales de los segmentos de una fractura, la longitud de los huesos, el ángulo formado entre dos secciones, etc. En la pr\'oxima secci\'on, se muestran los pasos necesarios para permitir la conversión de píxeles a milímetros de la imagen de estudio.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Preparación de la imagen}
+
+Para la calibración de las imágenes se utilizaron los orificios dejados por una perforadora de papel como Objeto de Referencia (OR), v\'ease la Figura \ref{fig:paper-punch}. La elección de dicho aparato se baso en la necesidad de utilizar un OR que este disponible en todo momento y pueda estar presente en el momento de la toma independientemente del negatoscopio a utilizar (e.g. negatoscopio general, port\'atil, de mural, etc.). La idea es colocar un OR en el momento de la toma y de esta forma conocer las medidas aproximadas de la imagen independientemente de la distancia de la toma y de la resolución de la cámara.
+
+\begin{figure}[htb]
+	\centering
+		\includegraphics[width=0.4\columnwidth]{images/paper-punch2.png}
+	\label{fig:paper-punch}
+	\caption{Perforadora de papel para crear los orificios en una placa de Rayos-X.}
+\end{figure}
+
+Dado que la perforadora de papel utilizada siempre crea los orificios en los bordes de la placa, solamente se consideran las franjas correspondientes donde posiblemente se encuentren éstas. Entonces, por cada imagen se extraen cuatro (4) subimágenes para ser analizadas y encontrar los orificios: parte superior, inferior, derecha e izquierda de la imagen. Para el caso de las subim\'agenes superior e inferior, el ancho corresponde al ancho de la imagen y el alto es un $10\%$ del alto de la imagen original. Se procede de la misma forma para las subim\'agenes derecha e izquierda.
+
+Para cada una de las subimágenes, se ejecuta el Algoritmo de Búsqueda de Orificios y luego el proceso de Calibración. En la siguiente sección, se explica con detalle dicho algoritmo.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Algoritmo de Búsqueda de Orificios}
+
+El Algoritmo de Búsqueda de Orificios permite que dada una Imagen $I$ de entrada, dos umbrales $U,T$  y un valor de error $E$, determinar la ubicación de dos orificios, creados por la perforadora de papel, dentro de $I$. Cabe destacar que el algoritmo necesita como entrada una imagen binaria, es decir, que utilice un solo bit por píxel en su representación (las subsecciones siguientes explican con mayor detalle este proceso). De esta forma solo existen dos colores: blanco y negro. Se asume que los círculos a buscar serán de color blanco por el contraste generado por el negatoscopio con la placa. Para conseguir la imagen binaria, se realiza un proceso de segmentación a dos niveles de $I$ (\textit{image binarization}). Luego de la binarizaci\'on el algoritmo busca una serie de candidatos a círculos y éstos son colocados en una cola de prioridad bajo un criterio de similitud. Seguidamente, los nodos de la cola son extraídos y comparados entre s\'i para encontrar los que tengan mayor similitud entre ambos.
+
+\subsection{Segmentación a dos niveles}
+
+La idea de la segmentación a dos niveles es crear una imagen a dos colores (e.g. blanco y negro) dada una imagen $I$. El algoritmo recibe una imagen a color, como se muestra en la Figura \ref{fig:segmentation}A. Esta imagen es convertida a una imagen de 8-bits con paleta de colores, como se observa en la Figura \ref{fig:segmentation}B.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{images/segmentation.png}
+	\caption{Etapas de conversión de la imagen original a solo dos niveles de color.}
+	\label{fig:segmentation}
+\end{figure}
+
+La conversión de una imagen a color a una imagen a escala de grises se realiza empleando la Ecuación \ref{eq:togray}, usando el criterio explicado en \cite{UMB05}. Con esta ecuación se obtiene un valor $color_{gray}$ que representa la intensidad de color (dentro del rango $0-255$) bas\'andose en la información de cada banda de color de la imagen original: rojo ($R$), verde ($G$) y azul ($B$).
+
+\begin{equation} 
+	\label{eq:togray}
+	color_{gray} = 0.299 \times R + 0.587 \times G + 0.114 \times B
+\end{equation}
+
+Finalmente para obtener la imagen binaria $I_b$, como se muestra en la Figura \ref{fig:segmentation}C, se realiza una umbralización simple sobre el rango $[200-220]$. El valor adecuado dentro de ese rango, se selecciona de acuerdo a la proporción del color negro en la imagen. Dicho rango fue seleccionado por ser satisfactorio sobre diversas imágenes de prueba.
+
+\subsection{Búsqueda de Orificios}
+
+Una vez obtenida $I_b$ se procede a realizar la búsqueda de los orificios. Los orificios creados por la perforadora de papel están aproximadamente a la misma distancia del borde de la placa, es decir, un orificio se encuentra en el mismo sentido vertical u horizontal del otro. Este aspecto es importante al momento de determinar la similitud entre dos posibles orificios detectados por el algoritmo.
+
+El algoritmo de Búsqueda de Orificios, mostrado en el Algoritmo \ref{busqueda}, selecciona una serie de `candidatos' a círculos y los coloca en una cola de prioridad basado en el criterio de error m\'inimo. Los candidatos son seleccionados por la similitud entre sí. Por último selecciona los candidatos más similares entre sí y de esa forma obtiene los orificios.
+
+Primeramente, el algoritmo recibe como entrada 4 parámetros explicados a continuación:
+\begin{enumerate}
+		\item $I_b$ es la imagen binaria de entrada.
+		\item $U$ es la diferencia permitida entre el alto y el ancho promediado de un candidato. Cabe destacar, que ambos valores deben ser cercanos ya que se busca un círculo (no necesariamente un c\'irculo perfecto).
+		\item $T$ es la diferencia entre la longitud de los diámetros de un posible candidato en forma de c\'irculo. El valor ideal de está diferencia, debe ser $0$.
+		\item $E$ es el error máximo permitido para considerar un candidato como círculo. Si un candidato supera este valor, entonces no se considera un orificio.
+\end{enumerate}
+
+
+\begin{algorithm}[htb]
+	\caption{Búsqueda de Orificios}\label{busqueda}
+	\begin{algorithmic}[1]
+	\Procedure{FindCircles}{$I_b,U,T,E$}	\label{prototype}\Comment{$I_b$ = imagen; U,T = umbral; E = error permitido}
+		\For {cada fila $F$ en $I_b$}	\label{first_for}
+			\For {cada píxel $P(x,f)$ de color blanco en $F$}
+				\State $pN \gets pS \gets pE \gets pO \gets 0$	\Comment{\# de píxeles blancos en dirección Norte, Sur, Este y Oeste}
+				\Loop
+					\If{$P(x,f+1) = blanco$}
+						$pN \gets pN + 1$
+					\EndIf
+					\If{$P(x,f-1) = blanco$}
+						$pS \gets pS + 1$
+					\EndIf
+					\If{$P(x+1,f) = blanco$}
+						$pE \gets pE + 1$
+					\EndIf
+					\If{$P(x-1,f) = blanco$}
+						$pO \gets pO + 1$
+					\EndIf
+				\EndLoop
+				\If{$p\{N|S|E|O\} > 0$ \underline{y} $|((pN+pS)/2) - ((pE+pO)/2)| < U$}
+					\State $d_1 = |pS - pN|$
+					\State $d_2 = |pE - pO|$
+					\If{$|d_1 - d_2| \le T$}
+					\Comment{posiblemente $P(x,f)$ es el centro de un círculo}
+						\State $Mask \gets \Call{CreateMask}{(pN+pS)/2}$
+						\State $error \gets \Call{ECM}{Mask, I_b, P(x,f)}$
+							\If{$error \le E$}
+								\State $Priority\_Queue.Add(P(x,f), (pN+pS)/2)$
+							\EndIf
+					\EndIf
+				\EndIf
+			\EndFor
+		\EndFor
+		\State $C_1,C_2 \gets \Call {Find2MostSimilar}{Priority\_Queue}$
+	\State \textbf{return} $C_1,C_2$\Comment{$C_1$ y  $C_2$ son los orificios hechas por la perforadora}
+	\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+El algoritmo empieza recorriendo cada píxel de color blanco de cada fila con el objetivo de determinar cuál es la distancia hasta los bordes de ese posible candidato. Con estos valores, la idea es determinar cuál de éstos es simétrico con respecto a un píxel centro de c\'irculo. Se puede observar que la Figura \ref{fig:circles}A es más irregular en proporción a la distancia a sus bordes desde el centro que la Figura \ref{fig:circles}B. Cabe destacar, que la Figura \ref{fig:circles}A no entra como candidato de orificio en el algoritmo.
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.35\columnwidth]{images/circles.png}
+	\caption{Recorrido en cuatro direcciones para una posici\'on $(x,y)$ en un posible candidato.}
+	\label{fig:circles}
+\end{figure}
+
+Para determinar el factor de simetría de un candidato, se verifica si la distancia desde el centro hacia las cuatro direcciones cardinales tienen longitudes similares. Estas distancias son almacenadas en las variables $pN,pS,pE,pO$ que se muestran en el Algoritmo de Búsqueda de Orificios. Al realizar está operación en cada píxel de cada fila, permite que se utilicen los valores antes mencionados para el siguiente píxel a analizar. Por ejemplo, si estamos en la posición $(x,y)$ al avanzar a la posición $(x+1,y)$ sería ideal utilizar los valores $pN,pS,pE,pO$ de $(x,y)$ para no calcularlos nuevamente.
+
+Para ello se construye una estructura de datos que consiste en un arreglo del tamaño de una fila donde cada celda almacena 4 valores: $pN,pS,pE,pO$. Con esta estructura, para los valores $pE,pO$ de una posición $(x,y)$ se utilizan sus adyacentes. Cuando se recorre una fila nueva, es decir la fila $(x,y+1)$, los valores $pN,pS$ son copiados como valores iniciales si existe un píxel blanco en esa posición con el objetivo de no contarlos nuevamente.
+
+Con los valores $pN,pS,pE,pO$ es posible determinar si una posición $(x,y)$ es el centro de un candidato a orificio basados en los valores de umbral $U,T$. Luego, se invoca a la función \verb+CreateMask+ donde se construye un arreglo bidimensional que contiene blancos y negros, donde los píxeles blancos forman un círculo con el objetivo de hacer una coincidencia de patrones \cite{PAJ01} (\textit{pattern matching}) de un espacio dentro de la imagen con un círculo perfecto.
+
+Es posible que el algoritmo retorne un solo orificio ó ninguno.
+
+Al realizar la coincidencia de patrones, se calcula el error cuadrático medio \cite{LEH98} con la función \verb+ECM+. Dicho valor de error permitirá determinar qué tan parecido fue un posible candidato a un círculo perfecto. Si el valor de este error es inferior a cierto umbral $E$, entonces se considera un candidato potencial. En las pruebas realizadas, se tomo como valor $E$ un $12\%$ de no coincidencia ya que permite considerar los casos en donde la imagen de entrada no sea de buena calidad. Posteriormente, dicha posición $(x,y)$ con un radio de dimensión $(pN+pS)/2$ es insertada en una cola de prioridad basado en el criterio de mínimo error.
+
+Como último paso del algoritmo, se invoca a la función \verb+Find2MostSimilar+ que recibe como parámetro a la cola de prioridad y busca el par de candidatos más parecidos. Los criterios para decidir similitud son:
+\begin{itemize}
+	\item Si el candidato $C_1$ ocupa un \'area $A_1$ en p\'ixeles, entonces el candidato $C_2$ debe ocupar un \'area $A_2 \pm A_1*0.02$.
+	\item Si un candidato se encuentra a una distancia $dx$ del borde de la imagen, el otro candidato debe estar a una distancia $d \le dx*1.5$ del mismo borde.
+	\item La distancia entre ambos candidatos, debe ser mayor al $15\%$ del total del lado donde se encuentran (ancho o alto) en la imagen.
+\end{itemize}
+
+Finalmente, es posible haber obtenido un solo orificio, dos orificios \'o ninguno. En caso de haber obtenido ning\'un orificio o solamente uno, se debe proveer la opci\'on de seleccionarlo de forma manual. En el caso de haber encontrado ambos orificios, se procede a la calibraci\'on.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Calibraci\'on}
+
+Una vez obtenidos ambos orificios, el proceso de calibraci\'on es trivial. Seg\'un el est\'andar ISO (\textit{International Organization for Standardization}) 838 \cite{REF_ISO838} publicado en 1974, titulado ``\textit{Paper $--$ Holes for general filing purposes}'', la distancia entre los centros de cada orificio tiene una medida de $12 \pm 1 mm$.
+
+Utilizando el est\'andar, es posible definir est\'a medida como la calibraci\'on para cualquier imagen. Si la distancia entre los centros de los orificios corresponde a $p$ p\'ixeles, entonces $p = 12mm$. Entonces, un p\'ixel corresponde a $\frac{12}{p}mm$. Existen fabricantes de perforadores de orificios que no utilizan el est\'andar ISO en la fabricaci\'on de los mismos. Sin embargo, este hecho ocasionar\'ia una calibraci\'on incorrecta. Una soluci\'on a esto, es ofrecer la posibilidad de modificar la distancia entre orificios de acuerdo al perforador de papel que se utilice, por ejemplo $12.5mm$, $13mm$, etc.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusiones}
+
+En el presente trabajo se mostr\'o una soluci\'on para la calibraci\'on de im\'agenes de placas de Rayos-X adquiridas a trav\'es de una c\'amara fotogr\'afica convencional. Dicho algoritmo, depende de la utilizaci\'on de un objeto de referencia al momento de adquirir la imagen y as\'i poder realizar la correspondencia entre las dimensiones l\'ogicas de la imagen y las dimensiones f\'isicas de la placa de Rayos-X.
+
+La soluci\'on desarrollada utiliza algoritmos para el procesamiento de im\'agenes as\'i como algoritmos de exploraci\'on para el reconocimiento de patrones. Al utilizar como objeto de referencia una perforadora de papel, el objeto a buscar dentro de la imagen siempre ser\'an dos orificios. Este factor permiti\'o restringuir el dominio espacial dentro de la imagen, con el objetivo de hacer una r\'apida inspecci\'on en la b\'usqueda de los orificios. Al mismo tiempo, no se requiere de equipos especiales por parte de los m\'edicos radi\'ologos al momento de tomar las im\'agenes para su posterior planificaci\'on preoperatoria. El m\'edico requerir\'a solamente la placa de Rayos-X, un negatoscopio, una c\'amara digital y una PC. Esto es una alternativa a otros equipos de mucho mayor costo, como un esc\'aner DICOM o una m\'aquina de Rayos-X completamente digital.
+
+Los algoritmos desarrollados forman parte del esquema desarrollado en \cite{RAM09} para ser empleados como una soluci\'on de bajo costo en Centros Hospitalarios. Es por ello, que la velocidad de ejecuci\'on y consumo de pocos recursos computacionales es ideal para garantizar su utilizaci\'on en PC convencionales sin restricciones de hardware.
+
+Cabe destacar que las im\'agenes adquiridas son tomadas por la c\'amara fotogr\'afica ubicada justo al frente de la placa de Rayos-X que se encuentra sobre un negatoscopio para lograr un buen contraste. Esto se hizo con el objetivo de minimizar la distorsi\'on creada por la visi\'on perspectiva que la c\'amara genera. Tambi\'en, se consider\'o no realizar la adquisici\'on de la imagen a una distancia mayor a $1m.$, con el objetivo de obtener una imagen donde la placa de Rayos-X ocupe la mayor proporci\'on de p\'ixeles.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Trabajos Futuros}
+
+Actualmente el algoritmo de b\'usqueda de orificios utiliza un esquema de memorizaci\'on para no recorrer nuevamente las posiciones donde se encuentran p\'ixeles blancos. Con este esquema, la velocidad del algoritmo se ve beneficiada pero no el espacio requerido. En el peor de los casos, la cantidad de espacio requerido corresponde a la totalidad de p\'ixeles existentes en la imagen, considerando que la imagen es completamente blanca. Para resolver este problema, se debe realizar una verificaci\'on que descarte estos casos para no ser evaluados.
+
+En el algoritmo, el valor de segmentaci\'on a dos niveles se realiza empleando una umbralizaci\'on simple basada en la cantidad de p\'ixeles en color negro que existe en la imagen. Un mejor enfoque ser\'ia utilizar otro tipo de segmentaci\'on a dos niveles basado en patrones dado que se quiere buscar orificios.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{babplain}
+%\bibliographystyle{plain}
+%\bibliographystyle{IEEEtran}
+%%\bibliographystyle{asr}
+%%
+\selectbiblanguage{spanish}
+%\bibliography{Paper_Siacg}
+
+\bibliography{books}
+
+\end{document}

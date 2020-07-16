@@ -4,6 +4,7 @@ Compilation of technical documents, links, images, slides that I wrote in some p
 
 **List**
 * 2010
+	* Calibración de Imágenes Radiográficas
 	* Digital Preoperative Planning for Long-Bone Fractures
 * 2009
     * Planificación Preoperatoria Digital en Traumatología
