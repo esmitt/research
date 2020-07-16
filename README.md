@@ -1,8 +1,9 @@
 # Research [articles, data & slides]
 
-Compilation of technical documents, links, images, slides that I wrote in some point. Those are ordered by years
+Compilation of technical documents, links, images, slides that I wrote in some point. Those are ordered by years. Majority are preprinted versions.
 
-**List**
+* 2011
+	* TraumaPlan: Una Solución para la Planificación Preoperatoria en Traumatología
 * 2010
 	* Calibración de Imágenes Radiográficas
 	* Digital Preoperative Planning for Long-Bone Fractures

@@ -5,6 +5,7 @@ En la actualidad, es conveniente que los Centros Hospitalarios almacenen los cas
 
 
 **Download**
+* In [ResearchGate](https://www.researchgate.net/publication/323605435_Calibracion_de_Imagenes_Radiograficas)
 * [RT-2010-2](RT-2010-2.pdf)
 
 
