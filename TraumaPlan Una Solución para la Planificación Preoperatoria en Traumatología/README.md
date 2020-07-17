@@ -26,4 +26,5 @@ Primer artículo en una revista (Venezuela).
   year={2011},
   journal={Enl@ce: Revista Venezolana de Información, Tecnología y Conocimiento},
   pages={61-78}
+  }
 ```
