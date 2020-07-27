@@ -3,7 +3,7 @@
 Compilation of technical documents, links, images, slides that I wrote in some point. Those are ordered by years. Majority are preprinted versions.
 
 * 2017
-	* Juegos de Entrenamiento Mental bajo un Ambiente de Realidad Virtual Inmersiva
+	* [Juegos de Entrenamiento Mental bajo un Ambiente de Realidad Virtual Inmersiva](Juegos de Entrenamiento Mental bajo un Ambiente de Realidad Virtual Inmersiva)
 * 2015
 	* Alpha: Una Notación Algorítimica basada en Pseudocódigo
 * 2012
